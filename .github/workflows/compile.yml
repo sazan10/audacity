@@ -1,0 +1,24 @@
+name: Linux Build
+
+on: push
+
+jobs:
+  build:
+    name: Build on Ubuntu
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      with:
+        ref: 157b3cbbee1d0ced2fb99094f85d8d06f600303e
+    - name: Install dependencies
+      run: | 
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake git python3-pip
+        sudo pip3 install conan
+        sudo apt-get install libgtk2.0-dev libasound2-dev libjack-jackd2-dev uuid-dev
+    - name: Build From source
+      run: |
+         mkdir build && cd build .
+         cmake -G "Unix Makefiles" ../audacity
+         make -j`nproc`
